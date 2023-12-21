@@ -53,6 +53,8 @@ void* findGrade(int player, char *lectureName); //find the grade from the player
 void printGrades(int player); //print all the grade history of the player
 */
 
+//print all the grade history of the player
+//ëª¨ë“  í”Œë ˆì´ì–´ì˜ ì„±ì  ê¸°ë¡ ì¶œë ¥
 void printGrades(int player)
 {
     int i;
@@ -64,6 +66,8 @@ void printGrades(int player)
     }
 }
 
+//print all player status at the beginning of each turn
+//ê°ìì˜ í„´ ì‹œì‘ ë¶€ë¶„ì—ì„œ ëª¨ë“  í”Œë ˆì´ì–´ ìƒíƒœ ì¶œë ¥
 void printPlayerStatus(void)
 {
      int i;
@@ -129,43 +133,43 @@ void actionNode(int player)
     switch(type)
     {
         //case lecture:
-        case SMMNODE_TYPE_LECTURE: // °­ÀÇ ³ëµå
-            if (cur_player[player].energy-smmObj_getNodeEnergy( boardPtr )<0) { // ÇöÀç ¿¡³ÊÁö°¡ ¼Ò¿ä¿¡³ÊÁö ÀÌ»ó ¾ø´Â °æ¿ì
-                break; // ¼ö°­ÇÒ ¼ö ¾øÀ½
+        case SMMNODE_TYPE_LECTURE: // ê°•ì˜ ë…¸ë“œ
+            if (cur_player[player].energy-smmObj_getNodeEnergy( boardPtr )<0) { // í˜„ì¬ ì—ë„ˆì§€ê°€ ì†Œìš”ì—ë„ˆì§€ ì´ìƒ ì—†ëŠ” ê²½ìš°
+                break; // ìˆ˜ê°•í•  ìˆ˜ ì—†ìŒ
             }
             cur_player[player].accumCredit += smmObj_getNodeCredit( boardPtr );
             cur_player[player].energy -= smmObj_getNodeEnergy( boardPtr );
             
             //grade generation
             smmObjType_e grade = takeLecture(player, name, smmObj_getNodeCredit( boardPtr ));
-            gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit( boardPtr ), 0, grade);
+            gradePtr = smmObj_genObject(name, smmObjType_grade, 0, smmObj_getNodeCredit( boardPtr ), 0, grade); //??ì— gradeê°€ ë“¤ì–´ê°€ì•¼ ì ì ˆí•¨
             smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr);
             
             break;
             
-        case SMMNODE_TYPE_RESTAURANT: // ½Ä´ç
-            // º¸Ãæ ¿¡³ÊÁö¸¸Å­ ÇÃ·¹ÀÌ¾îÀÇ ÇöÀç ¿¡³ÊÁö°¡ ´õÇØÁü
-            cur_player[player].energy += smmObj_getNodeEnergy( boardPtr ); // º¸Ãæ ¿¡³ÊÁö¸¸Å­ ´õÇÔ
+        case SMMNODE_TYPE_RESTAURANT: // ì‹ë‹¹
+            // ë³´ì¶© ì—ë„ˆì§€ë§Œí¼ í”Œë ˆì´ì–´ì˜ í˜„ì¬ ì—ë„ˆì§€ê°€ ë”í•´ì§
+            cur_player[player].energy += smmObj_getNodeEnergy( boardPtr ); // ë³´ì¶© ì—ë„ˆì§€ë§Œí¼ ë”í•¨
             break;
 
-        case SMMNODE_TYPE_LABORATORY: // ½ÇÇè½Ç
+        case SMMNODE_TYPE_LABORATORY: // ì‹¤í—˜ì‹¤
             break;
 
-        case SMMNODE_TYPE_HOME: // Áı
-            // Áö³ª°¡´Â ¼ø°£ ÁöÁ¤µÈ º¸Ãæ ¿¡³ÊÁö¸¸Å­ ÇöÀç ¿¡³ÊÁö¿¡ ´õÇØÁü
-            cur_player[player].energy += smmObj_getNodeEnergy( boardPtr ); // º¸Ãæ ¿¡³ÊÁö¸¸Å­ ´õÇÔ
+        case SMMNODE_TYPE_HOME: // ì§‘
+            // ì§€ë‚˜ê°€ëŠ” ìˆœê°„ ì§€ì •ëœ ë³´ì¶© ì—ë„ˆì§€ë§Œí¼ í˜„ì¬ ì—ë„ˆì§€ì— ë”í•´ì§
+            cur_player[player].energy += smmObj_getNodeEnergy( boardPtr ); // ë³´ì¶© ì—ë„ˆì§€ë§Œí¼ ë”í•¨
             break;
 
-        case SMMNODE_TYPE_GOTOLAB: // ½ÇÇè
-            // ½ÇÇèÁß »óÅÂ·Î ÀüÈ¯µÇ¸é¼­ ½ÇÇè½Ç·Î ÀÌµ¿ (ÁÖ»çÀ§ ´« ¹üÀ§¿¡¼­ ½ÇÇè ¼º°ø ±âÁØ°ªÀ» ·£´ıÀ¸·Î ÁöÁ¤.)
+        case SMMNODE_TYPE_GOTOLAB: // ì‹¤í—˜
+            // ì‹¤í—˜ì¤‘ ìƒíƒœë¡œ ì „í™˜ë˜ë©´ì„œ ì‹¤í—˜ì‹¤ë¡œ ì´ë™ (ì£¼ì‚¬ìœ„ ëˆˆ ë²”ìœ„ì—ì„œ ì‹¤í—˜ ì„±ê³µ ê¸°ì¤€ê°’ì„ ëœë¤ìœ¼ë¡œ ì§€ì •.)
             break;
 
-        case SMMNODE_TYPE_FOODCHANCE: // º¸Ãæ Âù½º 
-            // À½½ÄÄ«µå¸¦ ÇÑÀå ·£´ıÀ¸·Î °í¸£°í ¸í½ÃµÈ º¸Ãæ ¿¡³ÊÁö¸¦ ÇöÀç ¿¡³ÊÁö¿¡ ´õÇÔ
+        case SMMNODE_TYPE_FOODCHANCE: // ë³´ì¶© ì°¬ìŠ¤ 
+            // ìŒì‹ì¹´ë“œë¥¼ í•œì¥ ëœë¤ìœ¼ë¡œ ê³ ë¥´ê³  ëª…ì‹œëœ ë³´ì¶© ì—ë„ˆì§€ë¥¼ í˜„ì¬ ì—ë„ˆì§€ì— ë”í•¨
             break;
 
-        case SMMNODE_TYPE_FESTIVAL: // ÃàÁ¦
-            // ÃàÁ¦Ä«µå¸¦ ÇÑÀå ·£´ıÀ¸·Î °ñ¶ó¼­ ¸í½ÃµÈ ¹Ì¼ÇÀ» ¼öÇà
+        case SMMNODE_TYPE_FESTIVAL: // ì¶•ì œ
+            // ì¶•ì œì¹´ë“œë¥¼ í•œì¥ ëœë¤ìœ¼ë¡œ ê³¨ë¼ì„œ ëª…ì‹œëœ ë¯¸ì…˜ì„ ìˆ˜í–‰
             break;
 
         default:
@@ -173,6 +177,8 @@ void actionNode(int player)
     }
 }
 
+//make player go "step" steps on the board (check if player is graduated)
+//í”Œë ˆì´ì–´ê°€ ë³´ë“œì—ì„œ ë‹¨ê³„ë¥¼ ì°¨ê·¼ì°¨ê·¼ ë°Ÿë„ë¡(í”Œë ˆì´ì–´ê°€ ì¡¸ì—…í–ˆëŠ”ì§€ í™•ì¸)
 void goForward(int player, int step)
 {
      void *boardPtr;
@@ -184,9 +190,11 @@ void goForward(int player, int step)
                 smmObj_getNodeName(boardPtr);
 }
 
+//check if any player is graduated
+//í”Œë ˆì´ì–´ê°€ ì¡¸ì—…í–ˆëŠ”ì§€ í™•ì¸
 int isGraduated(void) { // print grade history of the player
-// cur_player¿¡ ÀÖ´Â ¸ğµç ¼±¼öµéÀÇ grade¸¦ Ãâ·ÂÇÏ´Â ÇÔ¼öÀÔ´Ï´Ù.
-// ÇÑ¸íÀÌ¶óµµ Á¹¾÷ÇÏ¸é 1À», ¾Æ¹«µµ Á¹¾÷ÇÏÁö ¾Ê¾ÒÀ¸¸é 0À» ¸®ÅÏÇÕ´Ï´Ù.
+// cur_playerì— ìˆëŠ” ëª¨ë“  ì„ ìˆ˜ë“¤ì˜ gradeë¥¼ ì¶œë ¥í•˜ëŠ” í•¨ìˆ˜ì…ë‹ˆë‹¤.
+// í•œëª…ì´ë¼ë„ ì¡¸ì—…í•˜ë©´ 1ì„, ì•„ë¬´ë„ ì¡¸ì—…í•˜ì§€ ì•Šì•˜ìœ¼ë©´ 0ì„ ë¦¬í„´í•©ë‹ˆë‹¤.
     for(int i=0; i<sizeof(cur_player)/sizeof(player_t); i++) {
         printGrades(i);
         if (cur_player[i].flag_graduate!=0) {
@@ -196,35 +204,41 @@ int isGraduated(void) { // print grade history of the player
     return 0;
 }
 
+//calculate average grade of the player
+//í”Œë ˆì´ì–´ì˜ í‰ê·  í•™ì  ê³„ì‚°
 float calcAverageGrade(int player) {
-    int totalCredit = 0; // ÀüÃ¼ credit ¼ö¸¦ ÀúÀåÇÏ´Â º¯¼ö
-    int totalGrade = 0; // ÀüÃ¼ gradeÀÇ ÇÕÀ» ÀúÀåÇÏ´Â º¯¼ö
+    int totalCredit = 0; // ì „ì²´ credit ìˆ˜ë¥¼ ì €ì¥í•˜ëŠ” ë³€ìˆ˜
+    int totalGrade = 0; // ì „ì²´ gradeì˜ í•©ì„ ì €ì¥í•˜ëŠ” ë³€ìˆ˜
 
     for (int i=0;i<smmdb_len(LISTNO_OFFSET_GRADE + player);i++) {
         void *boardObj = smmdb_getData(LISTNO_NODE, i);
-        totalCredit += smmObj_getNodeCredit(boardObj); // credit °¡Á®¿À´Â ÇÔ¼ö
-        totalGrade += smmObj_getNodeGrade(boardObj); // grade °¡Á®¿À´Â ÇÔ¼ö
+        totalCredit += smmObj_getNodeCredit(boardObj); // credit ê°€ì ¸ì˜¤ëŠ” í•¨ìˆ˜
+        totalGrade += smmObj_getNodeGrade(boardObj); // grade ê°€ì ¸ì˜¤ëŠ” í•¨ìˆ˜
     }
     return totalGrade/totalCredit;
 }
 
+//take the lecture (insert a grade of the player)
+//ê°•ì˜ ë“£ê¸°(í”Œë ˆì´ì–´ì˜ í•™ì  ì…ë ¥)
 smmObjType_e takeLecture(int player, char *lectureName, int credit) {
     void*  gradePtr;
-    smmObjType_e grade = rand() % 9; // ·£´ıÀ¸·Î ¼ºÀû »ı¼º
+    smmObjType_e grade = rand() % 9; // ëœë¤ìœ¼ë¡œ ì„±ì  ìƒì„±
 
-    gradePtr = smmObj_genObject(lectureName, smmObjType_grade, 0, credit, 0, grade); // °´Ã¼ »ı¼º
-    smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr); // µ¥ÀÌÅÍº£ÀÌ½º¿¡ ³»¿ª Ãß°¡
+    gradePtr = smmObj_genObject(lectureName, smmObjType_grade, 0, credit, 0, grade); // ê°ì²´ ìƒì„±
+    smmdb_addTail(LISTNO_OFFSET_GRADE + player, gradePtr); // ë°ì´í„°ë² ì´ìŠ¤ì— ë‚´ì—­ ì¶”ê°€
 
-    return grade; // ¼ºÀû Á¤º¸ ¹İÈ¯
+    return grade; // ì„±ì  ì •ë³´ ë°˜í™˜
 }
 
+//find the grade from the player's grade history
+//í”Œë ˆì´ì–´ì˜ í•™ì  ê¸°ë¡ì—ì„œ í•™ì  ì°¾ê¸°
 void* findGrade(int player, char *lectureName) { // find the grade from the player's grade history
     void *gradePtr;
-    for (int i=0;i<smmdb_len(LISTNO_OFFSET_GRADE + player);i++) // playerÀÇ ÀüÃ¼ grade history¸¦ ¼øÈ¸ÇÏ¸é¼­
+    for (int i=0;i<smmdb_len(LISTNO_OFFSET_GRADE + player);i++) // playerì˜ ì „ì²´ grade historyë¥¼ ìˆœíšŒí•˜ë©´ì„œ
     {
         gradePtr = smmdb_getData(LISTNO_OFFSET_GRADE + player, i);
-        if (strcmp(smmObj_getNodeName(gradePtr), lectureName)) { // lectureName°ú °°Àº °­ÀÇÀÌ¸§À» °¡Áø node¸¦ ¹ß°ßÇÏ¸é ÇØ´ç nodeÀÇ grade¸¦ ¹İÈ¯
-            return smmObj_getNodeGrade(gradePtr); // smm_object.c¿¡ Á¤ÀÇÇß½À´Ï´Ù.
+        if (strcmp(smmObj_getNodeName(gradePtr), lectureName)) { // lectureNameê³¼ ê°™ì€ ê°•ì˜ì´ë¦„ì„ ê°€ì§„ nodeë¥¼ ë°œê²¬í•˜ë©´ í•´ë‹¹ nodeì˜ gradeë¥¼ ë°˜í™˜
+            return smmObj_getNodeGrade(gradePtr); // smm_object.cì— ì •ì˜í–ˆìŠµë‹ˆë‹¤.
         }
     }
 }
